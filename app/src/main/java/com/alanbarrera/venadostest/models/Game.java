@@ -1,15 +1,20 @@
 package com.alanbarrera.venadostest.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class Game
 {
     private boolean local;
     private String opponent;
+    @SerializedName("opponent_image")
     private String opponentImage;
     private Date datetime;
     private String league;
+    @SerializedName("home_score")
     private int homeScore;
+    @SerializedName("away_score")
     private int awayScore;
 
     public Game(boolean local, String opponent, String opponentImage, Date datetime, String league, int homeScore, int awayScore)

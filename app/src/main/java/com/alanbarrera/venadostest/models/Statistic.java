@@ -1,11 +1,14 @@
 package com.alanbarrera.venadostest.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Statistic
 {
     private int position;
     private String image;
     private String team;
     private int games;
+    @SerializedName("score_diff")
     private int scoreDiff;
     private int points;
 

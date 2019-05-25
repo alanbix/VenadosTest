@@ -1,18 +1,24 @@
 package com.alanbarrera.venadostest.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class Player
 {
     private String name;
+    @SerializedName("first_surname")
     private String firstSurname;
+    @SerializedName("second_surname")
     private String secondSurname;
     private Date birthday;
+    @SerializedName("birth_place")
     private String birthPlace;
     private double weight;
     private double height;
     private String position;
     private int number;
+    @SerializedName("last_team")
     private String lastTeam;
     private String image;
 
