@@ -16,5 +16,8 @@
     <string name="tab_copa_mx">COPA MX</string>
     <string name="tab_ascenso_mx">ASCENSO MX</string>
 
+    <!-- Game fragment -->
+    <string name="venados_name">Venados F.C.</string>
+
 
 </resources>

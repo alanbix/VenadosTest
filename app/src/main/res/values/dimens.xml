@@ -8,4 +8,12 @@
 
     <!-- Navigation drawer -->
     <dimen name="venados_shield_size">64dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+    <!-- Game item -->
+    <dimen name="calendar_logo">48dp</dimen>
+    <dimen name="team_shield">96dp</dimen>
+    <dimen name="score">24sp</dimen>
+    <dimen name="team_name">16sp</dimen>
+    <dimen name="date">20sp</dimen>
 </resources>
