@@ -12,4 +12,9 @@
     <string name="menu_statistics">Estadísticas</string>
     <string name="menu_players">Jugadores</string>
 
+    <!-- Tab titles -->
+    <string name="tab_copa_mx">COPA MX</string>
+    <string name="tab_ascenso_mx">ASCENSO MX</string>
+
+
 </resources>
