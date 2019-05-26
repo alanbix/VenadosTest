@@ -2,9 +2,10 @@ package com.alanbarrera.venadostest.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Game
+public class Game implements Serializable
 {
     private boolean local;
     private String opponent;

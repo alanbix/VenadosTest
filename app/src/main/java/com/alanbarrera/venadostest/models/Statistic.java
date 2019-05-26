@@ -2,7 +2,9 @@ package com.alanbarrera.venadostest.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Statistic
+import java.io.Serializable;
+
+public class Statistic implements Serializable
 {
     private int position;
     private String image;

@@ -2,9 +2,10 @@ package com.alanbarrera.venadostest.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Player
+public class Player implements Serializable
 {
     private String name;
     @SerializedName("first_surname")
