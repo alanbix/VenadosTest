@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     IVenadosApiService apiService;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<Game> games;
+    private ArrayList<Game> copaMx;
+    private ArrayList<Game> ascensoMx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +39,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText(R.string.tab_copa_mx));
         tabs.addTab(tabs.newTab().setText(R.string.tab_ascenso_mx));
+        tabs.addOnTabSelectedListener(getTabListener());
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(getRefreshListener());
@@ -53,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         apiService = VenadosApiService.getService();
+        copaMx = new ArrayList<>();
+        ascensoMx = new ArrayList<>();
         games = new ArrayList<>();
         showGamesFragment();
     }
@@ -106,13 +112,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(response.isSuccessful() && response.body() != null)
                 {
-                    games = new ArrayList<>(response.body());
-                    // Code to refresh list fragment
-                    GamesFragment gamesFragment = (GamesFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                    if(gamesFragment != null && gamesFragment.isAdded()){
-                        gamesFragment.getArguments().putSerializable("GAMES", games);
-                        gamesFragment.updateGames();
-                    }
+                    updateLeagues(response.body());
+                    updateFragmentList();
+
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -137,12 +139,71 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadGames();
     }
 
+    private void updateLeagues(List<Game> allGames)
+    {
+        games.clear();
+        copaMx.clear();
+        ascensoMx.clear();
+
+        for(Game game : allGames)
+        {
+            if(game.getLeague().equalsIgnoreCase("Copa MX"))
+                copaMx.add(game);
+            else
+                ascensoMx.add(game);
+        }
+
+        TabLayout tabs = findViewById(R.id.tabs);
+
+        if(tabs.getSelectedTabPosition() == 0)
+            games = new ArrayList<>(copaMx);
+        else
+            games = new ArrayList<>(ascensoMx);
+    }
+
+    private void updateFragmentList()
+    {
+        GamesFragment gamesFragment = (GamesFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if(gamesFragment != null && gamesFragment.isAdded())
+        {
+            gamesFragment.getArguments().putSerializable("GAMES", games);
+            gamesFragment.updateGames();
+        }
+    }
+
     private SwipeRefreshLayout.OnRefreshListener getRefreshListener()
     {
         return new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadGames();
+            }
+        };
+    }
+
+    private TabLayout.OnTabSelectedListener getTabListener()
+    {
+        return new TabLayout.OnTabSelectedListener()
+        {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab)
+            {
+                if(tab.getText().equals("COPA MX"))
+                    games = new ArrayList<>(copaMx);
+                else
+                    games = new ArrayList<>(ascensoMx);
+
+                updateFragmentList();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         };
     }
