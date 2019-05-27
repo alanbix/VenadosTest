@@ -58,6 +58,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <LinearLayout
+            android:id="@+id/stats_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:text="@string/stats_title"
+                android:textSize="@dimen/stats_text_size"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:text="@string/stats_games"
+                android:textSize="@dimen/stats_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:text="@string/stats_diff"
+                android:textSize="@dimen/stats_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+            <TextView
+                android:text="@string/stats_points"
+                android:textSize="@dimen/stats_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"

@@ -22,5 +22,11 @@
     <!-- Calendar event -->
     <string name="event_description">Un magnífico partido de futbol</string>
 
+    <!-- Statistic Header -->
+    <string name="stats_title">Tabla General</string>
+    <string name="stats_games">JJ</string>
+    <string name="stats_diff">DG</string>
+    <string name="stats_points">PTS</string>
+
 
 </resources>

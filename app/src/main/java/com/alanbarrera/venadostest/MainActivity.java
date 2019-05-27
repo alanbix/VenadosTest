@@ -11,10 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.alanbarrera.venadostest.fragments.GamesFragment;
+import com.alanbarrera.venadostest.fragments.StatisticsFragment;
 import com.alanbarrera.venadostest.interfaces.IVenadosApiService;
 import com.alanbarrera.venadostest.models.Game;
+import com.alanbarrera.venadostest.models.Statistic;
 import com.alanbarrera.venadostest.network.VenadosApiService;
 import com.alanbarrera.venadostest.utils.CalendarUtil;
 
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Game> games;
     private ArrayList<Game> copaMx;
     private ArrayList<Game> ascensoMx;
+    private ArrayList<Statistic> statistics;
+    private ActiveFragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +66,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         copaMx = new ArrayList<>();
         ascensoMx = new ArrayList<>();
         games = new ArrayList<>();
+        statistics = new ArrayList<>();
         showGamesFragment();
+        activeFragment = ActiveFragment.GAMES;
     }
 
     @Override
@@ -75,16 +82,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
+        swipeRefreshLayout.setRefreshing(true);
+
         int id = item.getItemId();
 
         switch (id)
         {
             case R.id.nav_home:
+                showTabs(true);
+                showStatsHeader(false);
                 showGamesFragment();
                 break;
             case R.id.nav_statistics:
+                showTabs(false);
+                showStatsHeader(true);
+                showStatisticsFragment();
                 break;
             case R.id.nav_players:
                 break;
@@ -115,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if(response.isSuccessful() && response.body() != null)
                 {
                     updateLeagues(response.body());
-                    updateFragmentList();
+                    updateGameList();
 
                     swipeRefreshLayout.setRefreshing(false);
                 }
@@ -130,8 +144,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    public void loadStatistics()
+    {
+        Call<List<Statistic>> statisticsCall = apiService.getStatistics();
+
+        statisticsCall.enqueue(new Callback<List<Statistic>>()
+        {
+            @Override
+            public void onResponse(Call<List<Statistic>> call, Response<List<Statistic>> response)
+            {
+                if(response.isSuccessful() && response.body() != null)
+                {
+                    updateStatisticList(new ArrayList<>(response.body()));
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Statistic>> call, Throwable t)
+            {
+                Log.i("StatisticsCallback", "Failed to load elements");
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     private void showGamesFragment()
     {
+        activeFragment = ActiveFragment.GAMES;
+
         swipeRefreshLayout.setRefreshing(true);
         getSupportFragmentManager()
                 .beginTransaction()
@@ -139,6 +180,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
 
         loadGames();
+    }
+
+    private void showStatisticsFragment()
+    {
+        activeFragment = ActiveFragment.STATISTICS;
+
+        swipeRefreshLayout.setRefreshing(true);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, StatisticsFragment.newInstance(statistics))
+                .commit();
+
+        loadStatistics();
     }
 
     private void updateLeagues(List<Game> allGames)
@@ -163,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             games = new ArrayList<>(ascensoMx);
     }
 
-    private void updateFragmentList()
+    private void updateGameList()
     {
         GamesFragment gamesFragment = (GamesFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         if(gamesFragment != null && gamesFragment.isAdded())
@@ -173,12 +227,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void updateStatisticList(ArrayList<Statistic> statistics)
+    {
+        StatisticsFragment statisticsFragment = (StatisticsFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if(statisticsFragment != null && statisticsFragment.isAdded())
+        {
+            statisticsFragment.getArguments().putSerializable("STATISTICS", statistics);
+            statisticsFragment.updateStatistics();
+        }
+    }
+
     private SwipeRefreshLayout.OnRefreshListener getRefreshListener()
     {
         return new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
-                loadGames();
+            public void onRefresh()
+            {
+                switch (activeFragment)
+                {
+                    case GAMES:
+                        loadGames();
+                        break;
+                    case STATISTICS:
+                        loadStatistics();
+                        break;
+                    case PLAYERS:
+                        // loadPlayers();
+                        break;
+                    default:
+                        break;
+                }
             }
         };
     }
@@ -195,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 else
                     games = new ArrayList<>(ascensoMx);
 
-                updateFragmentList();
+                updateGameList();
             }
 
             @Override
@@ -209,4 +287,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         };
     }
+
+    private void showTabs(boolean show)
+    {
+        int visibility = show ? View.VISIBLE : View.GONE;
+        findViewById(R.id.tabs).setVisibility(visibility);
+    }
+
+    private void showStatsHeader(boolean show)
+    {
+        int visibility = show ? View.VISIBLE : View.GONE;
+        findViewById(R.id.stats_header).setVisibility(visibility);
+    }
+
+    enum ActiveFragment{GAMES, STATISTICS, PLAYERS}
 }
