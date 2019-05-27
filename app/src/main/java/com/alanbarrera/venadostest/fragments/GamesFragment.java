@@ -96,4 +96,14 @@ public class GamesFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(Game item);
     }
+
+    public void updateGames()
+    {
+        if (getArguments() != null) {
+            mGames = (ArrayList<Game>)getArguments().getSerializable("GAMES");
+            RecyclerView recyclerView = (RecyclerView) getView();
+            GameAdapter gameAdapter = (GameAdapter) recyclerView.getAdapter();
+            gameAdapter.updateGames(mGames);
+        }
+    }
 }

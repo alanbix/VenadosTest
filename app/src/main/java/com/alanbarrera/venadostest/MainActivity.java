@@ -5,6 +5,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,8 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GamesFragment.OnListFragmentInteractionListener
 {
     IVenadosApiService apiService;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ArrayList<Game> games;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tabs.addTab(tabs.newTab().setText(R.string.tab_copa_mx));
         tabs.addTab(tabs.newTab().setText(R.string.tab_ascenso_mx));
 
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(getRefreshListener());
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -47,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         apiService = VenadosApiService.getService();
-        loadGames();
+        games = new ArrayList<>();
+        showGamesFragment();
     }
 
     @Override
@@ -68,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id)
         {
             case R.id.nav_home:
-                loadGames();
+                showGamesFragment();
                 break;
             case R.id.nav_statistics:
                 break;
@@ -99,12 +106,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 if(response.isSuccessful() && response.body() != null)
                 {
-                    ArrayList<Game> games = new ArrayList<>(response.body());
-
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragmentContainer, GamesFragment.newInstance(games))
-                            .commit();
+                    games = new ArrayList<>(response.body());
+                    // Code to refresh list fragment
+                    GamesFragment gamesFragment = (GamesFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                    if(gamesFragment != null && gamesFragment.isAdded()){
+                        gamesFragment.getArguments().putSerializable("GAMES", games);
+                        gamesFragment.updateGames();
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
                 }
             }
 
@@ -112,7 +121,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onFailure(Call<List<Game>> call, Throwable t)
             {
                 Log.i("GamesCallback", "Failed to load elements");
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void showGamesFragment()
+    {
+        swipeRefreshLayout.setRefreshing(true);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, GamesFragment.newInstance(games))
+                .commit();
+
+        loadGames();
+    }
+
+    private SwipeRefreshLayout.OnRefreshListener getRefreshListener()
+    {
+        return new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadGames();
+            }
+        };
     }
 }

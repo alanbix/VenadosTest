@@ -121,4 +121,11 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
             opponentName = view.findViewById(R.id.opponent_name);
         }
     }
+
+    public void updateGames(ArrayList<Game> updatedGames)
+    {
+        mGames.clear();
+        mGames.addAll(updatedGames);
+        this.notifyDataSetChanged();
+    }
 }
