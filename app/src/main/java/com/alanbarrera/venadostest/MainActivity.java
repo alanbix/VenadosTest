@@ -16,6 +16,7 @@ import com.alanbarrera.venadostest.fragments.GamesFragment;
 import com.alanbarrera.venadostest.interfaces.IVenadosApiService;
 import com.alanbarrera.venadostest.models.Game;
 import com.alanbarrera.venadostest.network.VenadosApiService;
+import com.alanbarrera.venadostest.utils.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,8 +98,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onListFragmentInteraction(Game item) {
-
+    public void onListFragmentInteraction(Game game)
+    {
+        CalendarUtil.addGameEventToCalendar(this, game);
     }
 
     private void loadGames()

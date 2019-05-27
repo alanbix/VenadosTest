@@ -19,5 +19,8 @@
     <!-- Game fragment -->
     <string name="venados_name">Venados F.C.</string>
 
+    <!-- Calendar event -->
+    <string name="event_description">Un magnífico partido de futbol</string>
+
 
 </resources>
