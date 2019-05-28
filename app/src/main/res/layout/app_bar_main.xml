@@ -62,15 +62,16 @@
             android:id="@+id/stats_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:background="#7B9095"
             android:orientation="horizontal"
             android:visibility="gone">
 
             <TextView
                 android:text="@string/stats_title"
                 android:textSize="@dimen/stats_text_size"
-                android:layout_width="300dp"
-                android:layout_height="match_parent"/>
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"/>
             <TextView
                 android:text="@string/stats_games"
                 android:textSize="@dimen/stats_text_size"
