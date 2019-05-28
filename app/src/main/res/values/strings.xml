@@ -28,5 +28,13 @@
     <string name="stats_diff">DG</string>
     <string name="stats_points">PTS</string>
 
+    <!-- Player Details -->
+    <string name="pd_title">FICHA TÉCNICA</string>
+    <string name="pd_birthday">FECHA DE NACIMIENTO</string>
+    <string name="pd_birth_place">LUGAR DE NACIMIENTO</string>
+    <string name="pd_weight">PESO</string>
+    <string name="pd_height">ALTURA</string>
+    <string name="pd_last_team">EQUIPO ANTERIOR</string>
+
 
 </resources>

@@ -1,8 +1,6 @@
 package com.alanbarrera.venadostest;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -24,6 +22,7 @@ import com.alanbarrera.venadostest.models.Player;
 import com.alanbarrera.venadostest.models.Statistic;
 import com.alanbarrera.venadostest.network.VenadosApiService;
 import com.alanbarrera.venadostest.utils.CalendarUtil;
+import com.alanbarrera.venadostest.utils.DialogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,8 +129,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListFragmentPlayerInteraction(Player player) {
-        Log.i("playerName", player.getName());
+    public void onListFragmentPlayerInteraction(Player player)
+    {
+        DialogUtil.showPlayerDetails(this, player);
     }
 
     private void loadGames()

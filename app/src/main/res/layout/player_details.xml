@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="350dp"
+    android:layout_height="600dp">
+
+    <TextView
+        android:text="@string/pd_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_text_size"
+        android:layout_margin="@dimen/pd_margin"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/pd_image"
+        android:layout_width="@dimen/player_image_big"
+        android:layout_height="@dimen/player_image_big"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/pd_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"
+        android:layout_marginTop="@dimen/pd_margin"/>
+
+    <TextView
+        android:id="@+id/pd_position"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"/>
+
+    <TextView
+        android:id="@+id/pd_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"/>
+
+    <TextView
+        android:text="@string/pd_birthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_text_size"
+        android:layout_marginTop="@dimen/pd_margin"/>
+
+    <TextView
+        android:id="@+id/pd_birthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"/>
+
+    <TextView
+        android:text="@string/pd_birth_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_text_size"
+        android:layout_marginTop="@dimen/pd_margin"/>
+
+    <TextView
+        android:id="@+id/pd_birth_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"/>
+
+    <TextView
+        android:text="@string/pd_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_text_size"
+        android:layout_marginTop="@dimen/pd_margin"/>
+
+    <TextView
+        android:id="@+id/pd_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"/>
+
+    <TextView
+        android:text="@string/pd_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_text_size"
+        android:layout_marginTop="@dimen/pd_margin"/>
+
+    <TextView
+        android:id="@+id/pd_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"/>
+
+    <TextView
+        android:text="@string/pd_last_team"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_text_size"
+        android:layout_marginTop="@dimen/pd_margin"/>
+
+    <TextView
+        android:id="@+id/pd_last_team"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="@dimen/pd_info_text_size"/>
+
+</LinearLayout>
