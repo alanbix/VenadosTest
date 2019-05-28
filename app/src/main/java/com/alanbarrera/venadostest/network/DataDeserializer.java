@@ -12,12 +12,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This is the TypeAdapater used by Retrofit.
+ */
 public class DataDeserializer implements JsonDeserializer<List>
 {
     @Override
@@ -34,8 +35,10 @@ public class DataDeserializer implements JsonDeserializer<List>
         // Get the list
         JsonElement list = jDataObject.get(key);
 
+        // Create a null list type.
         Type listType = null;
 
+        // Set the listType depending on the key.
         switch (key)
         {
             case "games":
@@ -55,15 +58,27 @@ public class DataDeserializer implements JsonDeserializer<List>
         return new Gson().fromJson(list, listType);
     }
 
+    /**
+     * De-group the players and return a single list
+     * @param jTeam The object with the grouped players
+     * @return A Json Array with the players NOT grouped
+     */
     private JsonElement getJPlayers(JsonObject jTeam)
     {
+        // Get a key iterator.
         Iterator<String> keys = jTeam.keySet().iterator();
+
+        // Create new Json Array
         JsonArray jArrayPlayers = new JsonArray();
 
+        // Iterate over the grouped players
         while (keys.hasNext())
         {
+            // Extract the players of the group and add them in a single list
             jArrayPlayers.addAll(jTeam.get(keys.next()).getAsJsonArray());
         }
+
+        // Return the single players list.
         return jArrayPlayers;
     }
 }

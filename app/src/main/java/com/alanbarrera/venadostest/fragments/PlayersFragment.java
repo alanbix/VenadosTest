@@ -13,24 +13,35 @@ import android.view.ViewGroup;
 import com.alanbarrera.venadostest.R;
 import com.alanbarrera.venadostest.adapters.PlayersAdapter;
 import com.alanbarrera.venadostest.models.Player;
+import com.alanbarrera.venadostest.utils.Constants;
 
 import java.util.ArrayList;
 
-
-public class PlayersFragment extends Fragment {
+/**
+ * A fragment representing a list of Players.
+ * <p/>
+ * Activities containing this fragment MUST implement the {@link OnListFragmentPlayerInteractionListener}
+ * interface.
+ */
+public class PlayersFragment extends Fragment
+{
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 3;
+    private int mColumnCount = Constants.PLAYERS_GRID_COLUMNS;
     private OnListFragmentPlayerInteractionListener mListener;
     private ArrayList<Player> mPlayers;
 
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
     public PlayersFragment() {
     }
 
     public static PlayersFragment newInstance(ArrayList<Player> players, int columnCount) {
         PlayersFragment fragment = new PlayersFragment();
         Bundle args = new Bundle();
-        args.putSerializable("PLAYERS", players);
+        args.putSerializable(Constants.PLAYERS_KEY, players);
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
@@ -42,7 +53,7 @@ public class PlayersFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            mPlayers = (ArrayList<Player>) getArguments().getSerializable("PLAYERS");
+            mPlayers = (ArrayList<Player>) getArguments().getSerializable(Constants.PLAYERS_KEY);
         }
     }
 
@@ -88,15 +99,14 @@ public class PlayersFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentPlayerInteractionListener {
         void onListFragmentPlayerInteraction(Player player);
     }
 
+    /**
+     * Update the data of the recyler view.
+     */
     public void updatePlayers()
     {
         if (getArguments() != null) {

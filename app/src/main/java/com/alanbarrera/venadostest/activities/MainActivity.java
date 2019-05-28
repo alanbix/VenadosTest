@@ -22,9 +22,8 @@ import com.alanbarrera.venadostest.models.Game;
 import com.alanbarrera.venadostest.models.Player;
 import com.alanbarrera.venadostest.models.Statistic;
 import com.alanbarrera.venadostest.network.VenadosApiService;
-import com.alanbarrera.venadostest.utils.CalendarUtil;
 import com.alanbarrera.venadostest.utils.Constants;
-import com.alanbarrera.venadostest.utils.DialogUtil;
+import com.alanbarrera.venadostest.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,14 +155,14 @@ public class MainActivity extends AppCompatActivity implements
     public void onListFragmentInteraction(Game game)
     {
         // Add game event to the calendar.
-        CalendarUtil.addGameEventToCalendar(this, game);
+        Utilities.addGameEventToCalendar(this, game);
     }
 
     @Override
     public void onListFragmentPlayerInteraction(Player player)
     {
         // Show the selected player details.
-        DialogUtil.showPlayerDetails(this, player);
+        Utilities.showPlayerDetails(this, player);
     }
 
     /**
@@ -413,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements
         if(playersFragment != null && playersFragment.isAdded())
         {
             // Put the updated list on the fragment´s arguments.
-            playersFragment.getArguments().putSerializable(Constants.PALYERS_KEY, players);
+            playersFragment.getArguments().putSerializable(Constants.PLAYERS_KEY, players);
 
             // Update the recylcer view.
             playersFragment.updatePlayers();

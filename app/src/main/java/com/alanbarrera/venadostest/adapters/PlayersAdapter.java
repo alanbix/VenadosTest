@@ -15,13 +15,22 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHolder> {
+public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHolder>
+{
 
+    // List of players.
     private final ArrayList<Player> mPlayers;
+
+    // Interaction listener.
     private final OnListFragmentPlayerInteractionListener mListener;
 
-    public PlayersAdapter(ArrayList<Player> items, OnListFragmentPlayerInteractionListener listener) {
-        mPlayers = items;
+    /**
+     * Create new PlayersAdapter
+     * @param players List of players
+     * @param listener Listener for click event
+     */
+    public PlayersAdapter(ArrayList<Player> players, OnListFragmentPlayerInteractionListener listener) {
+        mPlayers = players;
         mListener = listener;
     }
 
@@ -33,7 +42,10 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position)
+    {
+        // Set data to the view holder.
+
         Player player = mPlayers.get(position);
         holder.mPlayer = player;
         holder.mPlayerPosition.setText(player.getPosition());
@@ -41,6 +53,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
         holder.mPlayerName.setText(name);
         Glide.with(holder.itemView).load(player.getImage()).into(holder.mPlayerImage);
 
+        // Set the OnClickListener of the view holder.
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +73,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder
     {
+        // Declare fields.
         public final View mView;
         public final CircleImageView mPlayerImage;
         public final TextView mPlayerPosition;
@@ -67,7 +81,9 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
         public Player mPlayer;
 
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view)
+        {
+            // Initialize fields.
             super(view);
             mView = view;
             mPlayerImage = view.findViewById(R.id.player_image);
@@ -76,10 +92,14 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.ViewHold
         }
     }
 
-    public void updatePlayers(ArrayList<Player> updatedGames)
+    /**
+     * Update the data of the recyler view.
+     * @param updatedPlayers The updated list of players.
+     */
+    public void updatePlayers(ArrayList<Player> updatedPlayers)
     {
         mPlayers.clear();
-        mPlayers.addAll(updatedGames);
+        mPlayers.addAll(updatedPlayers);
         this.notifyDataSetChanged();
     }
 }

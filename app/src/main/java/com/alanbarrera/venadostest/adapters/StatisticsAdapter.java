@@ -15,10 +15,11 @@ import java.util.ArrayList;
 
 public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.ViewHolder> {
 
+    // List of statistics.
     private final ArrayList<Statistic> mStatistics;
 
-    public StatisticsAdapter(ArrayList<Statistic> items) {
-        mStatistics = items;
+    public StatisticsAdapter(ArrayList<Statistic> statistics) {
+        mStatistics = statistics;
     }
 
     @Override
@@ -31,6 +32,8 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position)
     {
+        // Set data to the view holder.
+
         Statistic statistic = mStatistics.get(position);
 
         holder.mPosition.setText(String.valueOf(statistic.getPosition()));
@@ -47,7 +50,9 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.Vi
         return mStatistics.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder
+    {
+        // Declare fields.
         public final View mView;
         public final TextView mPosition;
         public final ImageView mShield;
@@ -57,7 +62,9 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.Vi
         public final TextView mPoints;
 
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view)
+        {
+            // Initialize fields.
             super(view);
             mView = view;
             mPosition = view.findViewById(R.id.stats_position);
@@ -69,6 +76,10 @@ public class StatisticsAdapter extends RecyclerView.Adapter<StatisticsAdapter.Vi
         }
     }
 
+    /**
+     * Update the data of the recyler view.
+     * @param updatedStatistics The updated list of statistics.
+     */
     public void updateStatistics(ArrayList<Statistic> updatedStatistics)
     {
         mStatistics.clear();

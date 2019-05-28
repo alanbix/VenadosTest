@@ -11,13 +11,21 @@ import android.view.ViewGroup;
 import com.alanbarrera.venadostest.R;
 import com.alanbarrera.venadostest.adapters.StatisticsAdapter;
 import com.alanbarrera.venadostest.models.Statistic;
+import com.alanbarrera.venadostest.utils.Constants;
 
 import java.util.ArrayList;
 
+/**
+ * A fragment representing a list of Statistics.
+ */
 public class StatisticsFragment extends Fragment
 {
     private ArrayList<Statistic> mStatistics = new ArrayList<>();
 
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
     public StatisticsFragment() {
     }
 
@@ -25,7 +33,7 @@ public class StatisticsFragment extends Fragment
     public static StatisticsFragment newInstance(ArrayList<Statistic> statistics) {
         StatisticsFragment fragment = new StatisticsFragment();
         Bundle args = new Bundle();
-        args.putSerializable("STATISTICS", statistics);
+        args.putSerializable(Constants.STATISTICS_KEY, statistics);
         fragment.setArguments(args);
         return fragment;
     }
@@ -34,7 +42,7 @@ public class StatisticsFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mStatistics = (ArrayList<Statistic>)getArguments().getSerializable("STATISTICS");
+            mStatistics = (ArrayList<Statistic>)getArguments().getSerializable(Constants.STATISTICS_KEY);
         }
     }
 
@@ -62,10 +70,13 @@ public class StatisticsFragment extends Fragment
         super.onDetach();
     }
 
+    /**
+     * Update the data of the recyler view.
+     */
     public void updateStatistics()
     {
         if (getArguments() != null) {
-            mStatistics = (ArrayList<Statistic>)getArguments().getSerializable("STATISTICS");
+            mStatistics = (ArrayList<Statistic>)getArguments().getSerializable(Constants.STATISTICS_KEY);
             RecyclerView recyclerView = (RecyclerView) getView();
             StatisticsAdapter statisticsAdapter = (StatisticsAdapter) recyclerView.getAdapter();
             statisticsAdapter.updateStatistics(mStatistics);

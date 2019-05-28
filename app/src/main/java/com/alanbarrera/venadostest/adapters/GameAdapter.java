@@ -20,12 +20,20 @@ import java.util.Locale;
 public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
 {
 
+    // List of games.
     private final ArrayList<Game> mGames;
+
+    // Interaction listener.
     private final OnListFragmentInteractionListener mListener;
 
-    public GameAdapter(ArrayList<Game> items, OnListFragmentInteractionListener listener)
+    /**
+     * Create new GameAdapater
+     * @param games List of games
+     * @param listener Listener for click event
+     */
+    public GameAdapter(ArrayList<Game> games, OnListFragmentInteractionListener listener)
     {
-        mGames = items;
+        mGames = games;
         mListener = listener;
     }
 
@@ -40,6 +48,8 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position)
     {
+        // Set data to the view holder.
+
         Game game = mGames.get(position);
 
         holder.mItem = game;
@@ -56,7 +66,8 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
         String score = game.getHomeScore() + " - " + game.getAwayScore();
         holder.score.setText(score);
 
-        if(game.isLocal()) {
+        if(game.isLocal())
+        {
             holder.localName.setText(R.string.venados_name);
             holder.opponentName.setText(game.getOpponent());
             Glide.with(holder.itemView).load(R.drawable.logo_venados_fc).into(holder.localImage);
@@ -69,6 +80,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
             Glide.with(holder.itemView).load(R.drawable.logo_venados_fc).into(holder.opponentImage);
         }
 
+        // Set the OnClickListener of the view holder.
         holder.mView.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -87,7 +99,10 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
         return mGames.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder
+    {
+        // Declare fields.
+
         public final View mView;
 
         // Calendar date
@@ -109,6 +124,8 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
 
         public ViewHolder(View view)
         {
+            // Initialize fields
+
             super(view);
             mView = view;
 
@@ -122,6 +139,10 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
         }
     }
 
+    /**
+     * Update the data of the recyler view.
+     * @param updatedGames The updated list of games.
+     */
     public void updateGames(ArrayList<Game> updatedGames)
     {
         mGames.clear();

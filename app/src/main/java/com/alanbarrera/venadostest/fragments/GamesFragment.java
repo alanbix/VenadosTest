@@ -12,17 +12,18 @@ import android.view.ViewGroup;
 import com.alanbarrera.venadostest.R;
 import com.alanbarrera.venadostest.adapters.GameAdapter;
 import com.alanbarrera.venadostest.models.Game;
+import com.alanbarrera.venadostest.utils.Constants;
 
 import java.util.ArrayList;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a list of Games.
  * <p/>
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class GamesFragment extends Fragment {
-
+public class GamesFragment extends Fragment
+{
     private ArrayList<Game> mGames;
     private OnListFragmentInteractionListener mListener;
 
@@ -36,7 +37,7 @@ public class GamesFragment extends Fragment {
     public static GamesFragment newInstance(ArrayList<Game> games) {
         GamesFragment fragment = new GamesFragment();
         Bundle args = new Bundle();
-        args.putSerializable("GAMES", games);
+        args.putSerializable(Constants.GAMES_KEY, games);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,7 +47,7 @@ public class GamesFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mGames = (ArrayList<Game>)getArguments().getSerializable("GAMES");
+            mGames = (ArrayList<Game>)getArguments().getSerializable(Constants.GAMES_KEY);
         }
     }
 
@@ -87,20 +88,18 @@ public class GamesFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(Game item);
     }
 
+    /**
+     * Update the data of the recyler view.
+     */
     public void updateGames()
     {
         if (getArguments() != null) {
-            mGames = (ArrayList<Game>)getArguments().getSerializable("GAMES");
+            mGames = (ArrayList<Game>)getArguments().getSerializable(Constants.GAMES_KEY);
             RecyclerView recyclerView = (RecyclerView) getView();
             GameAdapter gameAdapter = (GameAdapter) recyclerView.getAdapter();
             gameAdapter.updateGames(mGames);
