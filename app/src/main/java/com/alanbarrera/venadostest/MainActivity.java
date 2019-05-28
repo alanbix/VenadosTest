@@ -1,6 +1,8 @@
 package com.alanbarrera.venadostest;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -14,9 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.alanbarrera.venadostest.fragments.GamesFragment;
+import com.alanbarrera.venadostest.fragments.PlayersFragment;
 import com.alanbarrera.venadostest.fragments.StatisticsFragment;
 import com.alanbarrera.venadostest.interfaces.IVenadosApiService;
 import com.alanbarrera.venadostest.models.Game;
+import com.alanbarrera.venadostest.models.Player;
 import com.alanbarrera.venadostest.models.Statistic;
 import com.alanbarrera.venadostest.network.VenadosApiService;
 import com.alanbarrera.venadostest.utils.CalendarUtil;
@@ -28,7 +32,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, GamesFragment.OnListFragmentInteractionListener
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        GamesFragment.OnListFragmentInteractionListener,
+        PlayersFragment.OnListFragmentPlayerInteractionListener
 {
     IVenadosApiService apiService;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -36,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Game> copaMx;
     private ArrayList<Game> ascensoMx;
     private ArrayList<Statistic> statistics;
+    private ArrayList<Player> players;
     private ActiveFragment activeFragment;
 
     @Override
@@ -67,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ascensoMx = new ArrayList<>();
         games = new ArrayList<>();
         statistics = new ArrayList<>();
+        players = new ArrayList<>();
         showGamesFragment();
         activeFragment = ActiveFragment.GAMES;
     }
@@ -101,6 +110,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showStatisticsFragment();
                 break;
             case R.id.nav_players:
+                showTabs(false);
+                showStatsHeader(false);
+                showPlayersFragment();
                 break;
             default:
                 break;
@@ -115,6 +127,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onListFragmentInteraction(Game game)
     {
         CalendarUtil.addGameEventToCalendar(this, game);
+    }
+
+    @Override
+    public void onListFragmentPlayerInteraction(Player player) {
+        Log.i("playerName", player.getName());
     }
 
     private void loadGames()
@@ -169,6 +186,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    public void loadPlayers()
+    {
+        Call<List<Player>> playersCall = apiService.getPlayers();
+
+        playersCall.enqueue(new Callback<List<Player>>()
+        {
+            @Override
+            public void onResponse(Call<List<Player>> call, Response<List<Player>> response)
+            {
+                if(response.isSuccessful() && response.body() != null)
+                {
+                    updatePlayerList(new ArrayList<>(response.body()));
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Player>> call, Throwable t)
+            {
+                Log.i("StatisticsCallback", "Failed to load elements");
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     private void showGamesFragment()
     {
         activeFragment = ActiveFragment.GAMES;
@@ -193,6 +235,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
 
         loadStatistics();
+    }
+
+    private void showPlayersFragment()
+    {
+        activeFragment = ActiveFragment.PLAYERS;
+
+        swipeRefreshLayout.setRefreshing(true);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, PlayersFragment.newInstance(players, 3))
+                .commit();
+
+        loadPlayers();
     }
 
     private void updateLeagues(List<Game> allGames)
@@ -237,6 +292,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    private void updatePlayerList(ArrayList<Player> players)
+    {
+        PlayersFragment playersFragment = (PlayersFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if(playersFragment != null && playersFragment.isAdded())
+        {
+            playersFragment.getArguments().putSerializable("PLAYERS", players);
+            playersFragment.updatePlayers();
+        }
+    }
+
     private SwipeRefreshLayout.OnRefreshListener getRefreshListener()
     {
         return new SwipeRefreshLayout.OnRefreshListener() {
@@ -252,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         loadStatistics();
                         break;
                     case PLAYERS:
-                        // loadPlayers();
+                        loadPlayers();
                         break;
                     default:
                         break;
