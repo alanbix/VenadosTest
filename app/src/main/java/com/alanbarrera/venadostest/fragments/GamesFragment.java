@@ -15,6 +15,8 @@ import com.alanbarrera.venadostest.models.Game;
 import com.alanbarrera.venadostest.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A fragment representing a list of Games.
@@ -60,6 +62,7 @@ public class GamesFragment extends Fragment
         if (view instanceof RecyclerView) {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            addHeadersTo(mGames);
             recyclerView.setAdapter(new GameAdapter(mGames, mListener));
         }
         return view;
@@ -102,7 +105,39 @@ public class GamesFragment extends Fragment
             mGames = (ArrayList<Game>)getArguments().getSerializable(Constants.GAMES_KEY);
             RecyclerView recyclerView = (RecyclerView) getView();
             GameAdapter gameAdapter = (GameAdapter) recyclerView.getAdapter();
+            addHeadersTo(mGames);
             gameAdapter.updateGames(mGames);
+        }
+    }
+
+    private void addHeadersTo(ArrayList<Game> games)
+    {
+        if(games.size() > 0)
+        {
+            int lastMonthHeader = 0;
+
+            Collections.sort(games, new Comparator<Game>()
+            {
+                public int compare(Game game1, Game game2)
+                {
+                    if (game1.getDatetime() == null || game2.getDatetime() == null)
+                        return 0;
+
+                    return game1.getDatetime().compareTo(game2.getDatetime());
+                }
+            });
+
+            for (int i = 0; i < games.size(); i++)
+            {
+                Game game = games.get(i);
+
+                if (game.getDatetime().getMonth() > lastMonthHeader)
+                {
+                    games.add(i, new Game(game.getDatetime()));
+                    lastMonthHeader = game.getDatetime().getMonth();
+                    i++;
+                }
+            }
         }
     }
 }

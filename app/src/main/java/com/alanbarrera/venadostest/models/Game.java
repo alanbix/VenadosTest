@@ -29,6 +29,11 @@ public class Game implements Serializable
         this.awayScore = awayScore;
     }
 
+    public Game(Date datetime)
+    {
+        this.datetime = datetime;
+    }
+
     public boolean isLocal() {
         return local;
     }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
+public class GameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
 
     // List of games.
@@ -38,60 +38,83 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public int getItemViewType(int position)
     {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.game_item, parent, false);
-        return new ViewHolder(view);
+        // If opponent field IS NOT empty, then it IS NOT a header, return 0,
+        // otherwise return one.
+        return  mGames.get(position).getOpponent() != null ? 0 : 1;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position)
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        // Set data to the view holder.
+        View view;
 
+        if(viewType == 0)
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.game_item, parent, false);
+            return new GameViewHolder(view);
+        }
+        else
+        {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.game_header, parent, false);
+            return new GameHeaderViewHolder(view);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position)
+    {
         Game game = mGames.get(position);
 
-        holder.mItem = game;
+        if (holder.getItemViewType() == 0) {
+            final GameViewHolder gameViewHolder = (GameViewHolder) holder;
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(game.getDatetime());
+            // Set data to the view holder.
+            gameViewHolder.mItem = game;
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE",Locale.forLanguageTag("es-MX"));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(game.getDatetime());
 
-        String dayNumber = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
-        holder.mDayNumber.setText(dayNumber);
-        holder.mDayName.setText(dateFormat.format(game.getDatetime()).toUpperCase());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EE", Locale.forLanguageTag("es-MX"));
 
-        String score = game.getHomeScore() + " - " + game.getAwayScore();
-        holder.score.setText(score);
+            String dayNumber = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            gameViewHolder.mDayNumber.setText(dayNumber);
+            gameViewHolder.mDayName.setText(dateFormat.format(game.getDatetime()).toUpperCase());
 
-        if(game.isLocal())
-        {
-            holder.localName.setText(R.string.venados_name);
-            holder.opponentName.setText(game.getOpponent());
-            Glide.with(holder.itemView).load(R.drawable.logo_venados_fc).into(holder.localImage);
-            Glide.with(holder.itemView).load(game.getOpponentImage()).into(holder.opponentImage);
-        }
-        else {
-            holder.localName.setText(game.getOpponent());
-            holder.opponentName.setText(R.string.venados_name);
-            Glide.with(holder.itemView).load(game.getOpponentImage()).into(holder.localImage);
-            Glide.with(holder.itemView).load(R.drawable.logo_venados_fc).into(holder.opponentImage);
-        }
+            String score = game.getHomeScore() + " - " + game.getAwayScore();
+            gameViewHolder.score.setText(score);
 
-        // Set the OnClickListener of the view holder.
-        holder.mView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+            if (game.isLocal()) {
+                gameViewHolder.localName.setText(R.string.venados_name);
+                gameViewHolder.opponentName.setText(game.getOpponent());
+                Glide.with(gameViewHolder.itemView).load(R.drawable.logo_venados_fc).into(gameViewHolder.localImage);
+                Glide.with(gameViewHolder.itemView).load(game.getOpponentImage()).into(gameViewHolder.opponentImage);
+            } else {
+                gameViewHolder.localName.setText(game.getOpponent());
+                gameViewHolder.opponentName.setText(R.string.venados_name);
+                Glide.with(gameViewHolder.itemView).load(game.getOpponentImage()).into(gameViewHolder.localImage);
+                Glide.with(gameViewHolder.itemView).load(R.drawable.logo_venados_fc).into(gameViewHolder.opponentImage);
             }
-        });
+
+            // Set the OnClickListener of the view holder.
+            gameViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        // Notify the active callbacks interface (the activity, if the
+                        // fragment is attached to one) that an item has been selected.
+                        mListener.onListFragmentInteraction(gameViewHolder.mItem);
+                    }
+                }
+            });
+        }
+        else
+        {
+            final GameHeaderViewHolder gameHeaderViewHolder = (GameHeaderViewHolder) holder;
+            SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", Locale.forLanguageTag("es-MX"));
+            gameHeaderViewHolder.mHeader.setText(monthFormat.format(game.getDatetime()).toUpperCase());
+        }
     }
 
     @Override
@@ -99,7 +122,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
         return mGames.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder
+    public class GameViewHolder extends RecyclerView.ViewHolder
     {
         // Declare fields.
 
@@ -122,7 +145,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
 
         public Game mItem;
 
-        public ViewHolder(View view)
+        public GameViewHolder(View view)
         {
             // Initialize fields
 
@@ -136,6 +159,22 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>
             score = view.findViewById(R.id.score);
             opponentImage = view.findViewById(R.id.opponent_image);
             opponentName = view.findViewById(R.id.opponent_name);
+        }
+    }
+
+    public class GameHeaderViewHolder extends RecyclerView.ViewHolder
+    {
+        // Declare fields.
+        public final View mView;
+        public final TextView mHeader;
+
+        public GameHeaderViewHolder(View view)
+        {
+            // Initialize fields
+
+            super(view);
+            mView = view;
+            mHeader = view.findViewById(R.id.game_header_text);
         }
     }
 

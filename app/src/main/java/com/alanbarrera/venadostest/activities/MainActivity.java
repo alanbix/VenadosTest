@@ -308,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements
         switch (typeOfFragment)
         {
             case GAMES:
-                fragment = GamesFragment.newInstance(games);
+                fragment = GamesFragment.newInstance(new ArrayList<>(games));
                 break;
             case STATISTICS:
                 fragment = StatisticsFragment.newInstance(statistics);
@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements
         if(gamesFragment != null && gamesFragment.isAdded())
         {
             // Put the updated list on the fragment´s arguments.
-            gamesFragment.getArguments().putSerializable(Constants.GAMES_KEY, games);
+            gamesFragment.getArguments().putSerializable(Constants.GAMES_KEY, new ArrayList<>(games));
 
             // Update the recylcer view.
             gamesFragment.updateGames();
@@ -448,9 +448,9 @@ public class MainActivity extends AppCompatActivity implements
             public void onTabSelected(TabLayout.Tab tab)
             {
                 if(tab.getText().equals("COPA MX"))
-                    games = new ArrayList<>(copaMx);
+                    games = copaMx;
                 else
-                    games = new ArrayList<>(ascensoMx);
+                    games = ascensoMx;
 
                 updateGameList();
             }
